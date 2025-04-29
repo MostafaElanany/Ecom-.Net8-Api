@@ -31,7 +31,7 @@ namespace Ecom.API.Controllers
             return await paymentService.CreateOrUpdatePaymentAsync(basketId, deliveryId);
         }
 
-        const string endpointSecret = "whsec_18cf00274fc91bac91ad87d48a318da79aa3ba28977519d87351a7fa0a99cf8f";
+        const string endpointSecret = "your end point secret ";
 
         // Webhook for handling Stripe events
         [HttpPost("webhook")]
