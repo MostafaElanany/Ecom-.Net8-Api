@@ -1,6 +1,7 @@
 using Ecom.API.Middleware;
 using Ecom.infrastructure; // Ensure this namespace is correct
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -16,6 +17,24 @@ namespace Ecom.API
             builder.Services.infrastructureConfiguration(builder.Configuration);
             builder.Services.AddMemoryCache();
             builder.Services.AddControllers();
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var errors = context.ModelState
+                        .Where(e => e.Value.Errors.Count > 0)
+                        .ToDictionary(
+                            e => e.Key,
+                            e => e.Value.Errors.Select(x => x.ErrorMessage)
+                        );
+
+                    return new BadRequestObjectResult(new
+                    {
+                        statusCode = 400,
+                        errors
+                    });
+                };
+            });
 
             // Swagger setup
             builder.Services.AddEndpointsApiExplorer();
