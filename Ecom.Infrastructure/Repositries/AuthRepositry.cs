@@ -82,6 +82,10 @@ namespace Ecom.infrastructure.Repositries
                 return null;
             }
             var finduser = await userManager.FindByEmailAsync(login.Email);
+            if (finduser == null)
+            {
+                return "please check your email and password, something went wrong";
+            }
 
             if (!finduser.EmailConfirmed)
             {
